@@ -6,7 +6,7 @@ public class CollisionHandler : MonoBehaviour
 {
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = new Color(1, 0, 0, 0.3f);
 
         for (int i = 0; i < 3; i++)
         {
@@ -15,7 +15,7 @@ public class CollisionHandler : MonoBehaviour
                 for (int k = 0; k < 3; k++)
                 {
                     if (GetCollidingEntities(i - 1, j - 1, k - 1).Length > 0)
-                        Gizmos.DrawCube(transform.position + Vector3.right * (i - 1) + Vector3.up * (j - 1) + Vector3.forward * (k - 1), new Vector3(1, 1, 1));
+                        Gizmos.DrawCube(transform.position + Vector3.right * (i - 1) + Vector3.up * (j - 1) + Vector3.forward * (k - 1), new Vector3(1.01f, 1.01f, 1.01f));
                 }
             }
         }
