@@ -16,6 +16,11 @@ public abstract class CubeBehaviour : ScriptableObject
         cube.StartRotation(pos, dir);
     }
 
+    public void SetTranslation(CubeController cube, Vector3 disp)
+    {
+        cube.SetTranslationVelocity(disp);
+    }
+
     public void Translate(CubeController cube, Vector3 disp)
     {
         cube.transform.position += disp;

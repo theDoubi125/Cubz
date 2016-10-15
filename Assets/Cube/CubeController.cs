@@ -21,6 +21,7 @@ public class CubeController : MonoBehaviour
     public float gravity;
 
     private Vector3 relativeRotCenter;
+    private Vector3 translationVelocity;
 
     public CollisionHandler colHandler;
     public CubeBehaviour behaviour;
@@ -36,6 +37,7 @@ public class CubeController : MonoBehaviour
         behaviours = new Dictionary<string, CubeBehaviour>();
         behaviours.Add("Standing", ScriptableObject.CreateInstance<StandingBehaviour>());
         behaviours.Add("Rolling", ScriptableObject.CreateInstance<RollingBehaviour>());
+        behaviours.Add("Falling", ScriptableObject.CreateInstance<FallingBehaviour>());
     }
 
     void Update()
@@ -76,9 +78,10 @@ public class CubeController : MonoBehaviour
         currentSpeed = speed;
     }
 
-    private void UpdateCollisions()
+    public void SetTranslationVelocity(Vector3 velocity)
     {
-        
+        translationVelocity = velocity;
+        print("TRANSLATION " + velocity);
     }
 	
 	private void UpdateMovement ()
@@ -87,7 +90,7 @@ public class CubeController : MonoBehaviour
         right = Vector3.zero;
         ComputeInputVectors();
         //print(Vector3.Project(camTransform.forward, Vector3.right).magnitude + " " + Vector3.Project(camTransform.right, Vector3.right).magnitude);
-        
+
         // Brain
         /*if (currentDir == Vector3.zero)
         {
@@ -118,6 +121,7 @@ public class CubeController : MonoBehaviour
                 currentPos = 0;
             }
         }
+        transform.position += translationVelocity * deltaTime * currentSpeed;
         if (currentDir != Vector3.zero)
         {
             transform.RotateAround(transform.position
@@ -127,11 +131,12 @@ public class CubeController : MonoBehaviour
                 , Vector3.Cross(Vector3.up, currentDir)
                 , 90 * deltaTime * currentSpeed
             );
-            if(!isOnGround)
-                currentPos += deltaTime * currentSpeed;
         }
-        if(isOnGround)
+
+        if (isOnGround)
             behaviour.OnGround(this);
+        else
+            currentPos += deltaTime * currentSpeed;
     }
 
     private void ComputeInputVectors()
