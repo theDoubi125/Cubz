@@ -9,11 +9,23 @@ public class StandingBehaviour : CubeBehaviour
     {
         Debug.Log("START STANDING");
         SetRotationSpeed(cube, 0);
+        SetMovementDistance(cube, 1);
+    }
+
+    public override void OnEnd(CubeController cube)
+    {
+        Debug.Log("END STANDING");
+
     }
 
     public override void OnGround(CubeController cube)
     {
 
+    }
+
+    public override void OnBack(CubeController cube)
+    {
+        OnGround(cube);
     }
 
     public override void UpdateBehaviour(CubeController cube)

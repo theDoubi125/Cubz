@@ -16,7 +16,7 @@ public class CubeController : MonoBehaviour
 
     private Vector3 rotCenter;
     public float acceleration, deceleration, maxSpeed;
-    public float currentSpeed, currentPos;
+    public float currentSpeed, currentPos, movementDistance;
     private Vector3 currentDir;
     public float gravity;
 
@@ -81,7 +81,21 @@ public class CubeController : MonoBehaviour
     public void SetTranslationVelocity(Vector3 velocity)
     {
         translationVelocity = velocity;
-        print("TRANSLATION " + velocity);
+    }
+
+    public void SetMovementDistance(float distance)
+    {
+        this.movementDistance = distance;
+    }
+
+    public float GetInputWork()
+    {
+        return Vector3.Dot(currentDir, inputVector);
+    }
+
+    public void ReverseMovement()
+    {
+        currentPos = movementDistance;
     }
 	
 	private void UpdateMovement ()
@@ -89,35 +103,26 @@ public class CubeController : MonoBehaviour
         forward = Vector3.zero;
         right = Vector3.zero;
         ComputeInputVectors();
-        //print(Vector3.Project(camTransform.forward, Vector3.right).magnitude + " " + Vector3.Project(camTransform.right, Vector3.right).magnitude);
-
-        // Brain
-        /*if (currentDir == Vector3.zero)
-        {
-            ComputeDirection();
-            ComputeRotationCenter();
-        }*/
-        //UpdateSpeed();
 
         behaviour.UpdateBehaviour(this);
 
         // Update
         float deltaTime = Time.deltaTime;
-        //bool movementFinished = false;
 
         bool isOnGround = false;
+        bool isBack = false;
         if (currentSpeed != 0)
         {
-            if (currentPos + deltaTime * currentSpeed >= 1)
+            if (currentPos + deltaTime * currentSpeed >= movementDistance)
             {
-                deltaTime = (1 - currentPos) / currentSpeed;
+                deltaTime = (movementDistance - currentPos) / currentSpeed;
                 isOnGround = true;
                 currentPos = 0;
             }
             if (currentPos + deltaTime * currentSpeed < 0)
             {
                 deltaTime = -currentPos / currentSpeed;
-                isOnGround = true;
+                isBack = true;
                 currentPos = 0;
             }
         }
@@ -134,7 +139,13 @@ public class CubeController : MonoBehaviour
         }
 
         if (isOnGround)
+        {
             behaviour.OnGround(this);
+        }
+        else if(isBack)
+        {
+            behaviour.OnBack(this);
+        }
         else
             currentPos += deltaTime * currentSpeed;
     }
@@ -152,48 +163,6 @@ public class CubeController : MonoBehaviour
             right = Vector3.Project(camTransform.right, Vector3.right).normalized;
             forward = Vector3.Project(camTransform.forward, Vector3.forward).normalized;
         }
-    }
-
-    /*private void ComputeDirection()
-    {
-        if (Mathf.Abs(Input.GetAxis("Horizontal")) > Mathf.Abs(Input.GetAxis("Vertical")))
-            currentDir = (right * Input.GetAxis("Horizontal")).normalized;
-        else
-            currentDir = (forward * Input.GetAxis("Vertical")).normalized;
-        if (!colHandler.IsCellEmpty(currentDir) && !colHandler.IsCellEmpty(0, 1, 0))
-            currentDir = Vector3.zero;
-    }
-
-    private void ComputeRotationCenter()
-    {
-        if(colHandler.IsCellEmpty(currentDir))
-        {
-            relativeRotCenter.x = Vector3.Dot(currentDir + Vector3.down, transform.right);
-            relativeRotCenter.y = Vector3.Dot(currentDir + Vector3.down, transform.up);
-            relativeRotCenter.z = Vector3.Dot(currentDir + Vector3.down, transform.forward);
-        }
-        else
-        {
-            relativeRotCenter.x = Vector3.Dot(currentDir + Vector3.up, transform.right);
-            relativeRotCenter.y = Vector3.Dot(currentDir + Vector3.up, transform.up);
-            relativeRotCenter.z = Vector3.Dot(currentDir + Vector3.up, transform.forward);
-        }
-    }*/
-
-    private void UpdateSpeed()
-    {
-        Vector3 inputVector = right * Input.GetAxis("Horizontal") + forward * Input.GetAxis("Vertical");
-        if (currentDir != Vector3.zero)
-        {
-            if (currentPos < 0.5)
-                currentSpeed -= gravity * Time.deltaTime;
-            else
-                currentSpeed += gravity * Time.deltaTime;
-        }
-        currentSpeed += Vector3.Dot(currentDir, inputVector) * Time.deltaTime * acceleration;
-        if (currentSpeed > maxSpeed)
-            currentSpeed = maxSpeed;
-
     }
 
     public Vector3 inputVector { get { return right * Input.GetAxis("Horizontal") + forward * Input.GetAxis("Vertical"); } }
