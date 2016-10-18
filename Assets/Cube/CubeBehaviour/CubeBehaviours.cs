@@ -7,6 +7,7 @@ public abstract class CubeBehaviour : ScriptableObject
 {
     Vector3 rotationCenter;
     protected CubeController cube;
+    List<MovingBlock> attachedBlocks = new List<MovingBlock>();
 
     public abstract void OnStart();
     public abstract void UpdateBehaviour();
@@ -49,5 +50,39 @@ public abstract class CubeBehaviour : ScriptableObject
     public void SetCube(CubeController cube)
     {
         this.cube = cube;
+    }
+
+    public void AttachTo(Vector3 pos)
+    {
+        foreach (Collider collider in cube.colHandler.GetCollidingEntities(pos))
+        {
+            MovingBlock block = collider.GetComponent<MovingBlock>();
+            if (block)
+            {
+                block.AttachCube(cube.transform);
+                attachedBlocks.Add(block);
+            }
+        }
+    }
+
+    public void DetachAll()
+    {
+        foreach(MovingBlock attachedBlock in attachedBlocks)
+        {
+            attachedBlock.DetachCube(cube.transform);
+        }
+        attachedBlocks.Clear();
+    }
+
+    public void DetachTo(Vector3 pos)
+    {
+        foreach (Collider collider in cube.colHandler.GetCollidingEntities(pos))
+        {
+            MovingBlock block = collider.GetComponent<MovingBlock>();
+            if (block)
+            {
+                block.DetachCube(cube.transform);
+            }
+        }
     }
 }

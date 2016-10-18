@@ -10,12 +10,13 @@ public class StandingBehaviour : CubeBehaviour
         Debug.Log("START STANDING");
         SetRotationSpeed(0);
         SetMovementDistance(1);
+        AttachTo(Vector3.down);
     }
 
     public override void OnEnd()
     {
         Debug.Log("END STANDING");
-
+        DetachTo(Vector3.down);
     }
 
     public override void OnGround()

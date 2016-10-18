@@ -24,6 +24,7 @@ public class RollingBehaviour : CubeBehaviour
         currentSpeed = 0;
         climbing = false;
         lastClimb = false;
+        DetachAll();
     }
 
     public void InitDir()
@@ -42,6 +43,7 @@ public class RollingBehaviour : CubeBehaviour
                 SetMovementDistance(1);
                 StartRotation(currentDir + Vector3.down, currentDir);
                 SetRotationSpeed(currentSpeed);
+                AttachTo(Vector3.down + currentDir);
             }
             else if (!climbing || cube.colHandler.IsCellEmpty(currentDir))
             {
@@ -53,6 +55,8 @@ public class RollingBehaviour : CubeBehaviour
                     SetMovementDistance(1);
                 StartRotation(currentDir + Vector3.up, currentDir);
                 SetRotationSpeed(currentSpeed);
+                AttachTo(currentDir);
+                AttachTo(currentDir + Vector3.up);
             }
             else if (cube.colHandler.IsCellEmpty(Vector3.down))
             {
