@@ -166,5 +166,13 @@ public class CubeController : MonoBehaviour
         }
     }
 
+    public Vector3 GetMainInputDirection()
+    {
+        if (Mathf.Abs(Input.GetAxis("Horizontal")) > Mathf.Abs(Input.GetAxis("Vertical")))
+            return(right * Input.GetAxis("Horizontal")).normalized;
+        else
+            return (forward * Input.GetAxis("Vertical")).normalized;
+    }
+
     public Vector3 inputVector { get { return right * Input.GetAxis("Horizontal") + forward * Input.GetAxis("Vertical"); } }
 }

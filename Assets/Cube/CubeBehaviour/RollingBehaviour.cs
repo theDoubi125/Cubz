@@ -31,10 +31,7 @@ public class RollingBehaviour : CubeBehaviour
         currentSpeed = Mathf.Abs(currentSpeed);
         if(!climbing)
         {
-            if (Mathf.Abs(Input.GetAxis("Horizontal")) > Mathf.Abs(Input.GetAxis("Vertical")))
-                currentDir = (cube.right * Input.GetAxis("Horizontal")).normalized;
-            else
-                currentDir = (cube.forward * Input.GetAxis("Vertical")).normalized;
+            currentDir = cube.GetMainInputDirection();
         }
         lastClimb = climbing;
         if (cube.colHandler.IsCellEmpty(Vector3.up))
@@ -72,7 +69,7 @@ public class RollingBehaviour : CubeBehaviour
         Debug.Log("OnGround");
         if (!climbing && cube.colHandler.IsCellEmpty(Vector3.down))
             ChangeBehaviour("Falling");
-        else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        else if (cube.GetMainInputDirection().sqrMagnitude > 0)
             InitDir();
         else ChangeBehaviour("Standing");
     }
