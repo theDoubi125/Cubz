@@ -5,34 +5,34 @@ using UnityEngine;
 [CreateAssetMenu]
 public class StandingBehaviour : CubeBehaviour
 {
-    public override void OnStart(CubeController cube)
+    public override void OnStart()
     {
         Debug.Log("START STANDING");
-        SetRotationSpeed(cube, 0);
-        SetMovementDistance(cube, 1);
+        SetRotationSpeed(0);
+        SetMovementDistance(1);
     }
 
-    public override void OnEnd(CubeController cube)
+    public override void OnEnd()
     {
         Debug.Log("END STANDING");
 
     }
 
-    public override void OnGround(CubeController cube)
+    public override void OnGround()
     {
 
     }
 
-    public override void OnBack(CubeController cube)
+    public override void OnBack()
     {
-        OnGround(cube);
+        OnGround();
     }
 
-    public override void UpdateBehaviour(CubeController cube)
+    public override void UpdateBehaviour()
     {
         if (cube.colHandler.IsCellEmpty(Vector3.down))
-            ChangeBehaviour(cube, "Falling");
+            ChangeBehaviour("Falling");
         else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            ChangeBehaviour(cube, "Rolling");
+            ChangeBehaviour("Rolling");
     }
 }

@@ -6,42 +6,48 @@ using UnityEngine;
 public abstract class CubeBehaviour : ScriptableObject
 {
     Vector3 rotationCenter;
+    protected CubeController cube;
 
-    public abstract void OnStart(CubeController cube);
-    public abstract void UpdateBehaviour(CubeController cube);
-    public abstract void OnGround(CubeController cube);
-    public abstract void OnEnd(CubeController cube);
-    public abstract void OnBack(CubeController cube);
+    public abstract void OnStart();
+    public abstract void UpdateBehaviour();
+    public abstract void OnGround();
+    public abstract void OnEnd();
+    public abstract void OnBack();
 
-    public void StartRotation(CubeController cube, Vector3 pos, Vector3 dir)
+    public void StartRotation(Vector3 pos, Vector3 dir)
     {
         cube.StartRotation(pos, dir);
     }
 
-    public void SetTranslation(CubeController cube, Vector3 disp)
+    public void SetTranslation(Vector3 disp)
     {
         Debug.Log("Set Translation " + disp);
         cube.SetTranslationVelocity(disp);
     }
 
-    public void SetMovementDistance(CubeController cube, float distance)
+    public void SetMovementDistance(float distance)
     {
         cube.SetMovementDistance(distance);
     }
 
-    public void Translate(CubeController cube, Vector3 disp)
+    public void Translate(Vector3 disp)
     {
         cube.transform.position += disp;
     }
 
-    public void SetRotationSpeed(CubeController cube, float speed)
+    public void SetRotationSpeed(float speed)
     {
         cube.SetRotationSpeed(speed);
     }
 
-    public void ChangeBehaviour(CubeController cube, string behaviourName)
+    public void ChangeBehaviour(string behaviourName)
     {
-        OnEnd(cube);
+        OnEnd();
         cube.SetBehaviour(behaviourName);
+    }
+
+    public void SetCube(CubeController cube)
+    {
+        this.cube = cube;
     }
 }

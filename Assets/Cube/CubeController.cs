@@ -28,16 +28,16 @@ public class CubeController : MonoBehaviour
 
     public Vector3 right, forward;
 
-    public Dictionary<string, CubeBehaviour> behaviours; 
+    public Dictionary<string, CubeBehaviour> behaviours;
 
 	void Start ()
     {
         colHandler = GetComponent<CollisionHandler>();
-        behaviour = ScriptableObject.CreateInstance<StandingBehaviour>();
         behaviours = new Dictionary<string, CubeBehaviour>();
         behaviours.Add("Standing", ScriptableObject.CreateInstance<StandingBehaviour>());
         behaviours.Add("Rolling", ScriptableObject.CreateInstance<RollingBehaviour>());
         behaviours.Add("Falling", ScriptableObject.CreateInstance<FallingBehaviour>());
+        SetBehaviour("Standing");
     }
 
     void Update()
@@ -62,7 +62,8 @@ public class CubeController : MonoBehaviour
     public void SetBehaviour(string behaviourName)
     {
         this.behaviour = GetBehaviour(behaviourName);
-        behaviour.OnStart(this);
+        behaviour.SetCube(this);
+        behaviour.OnStart();
     }
 
     public void StartRotation(Vector3 center, Vector3 dir)
@@ -104,7 +105,7 @@ public class CubeController : MonoBehaviour
         right = Vector3.zero;
         ComputeInputVectors();
 
-        behaviour.UpdateBehaviour(this);
+        behaviour.UpdateBehaviour();
 
         // Update
         float deltaTime = Time.deltaTime;
@@ -140,11 +141,11 @@ public class CubeController : MonoBehaviour
 
         if (isOnGround)
         {
-            behaviour.OnGround(this);
+            behaviour.OnGround();
         }
         else if(isBack)
         {
-            behaviour.OnBack(this);
+            behaviour.OnBack();
         }
         else
             currentPos += deltaTime * currentSpeed;

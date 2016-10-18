@@ -10,15 +10,15 @@ public class RollingBehaviour : CubeBehaviour
     private Vector3 currentDir;
     private float currentSpeed;
 
-    public override void OnStart(CubeController cube)
+    public override void OnStart()
     {
         Debug.Log("START ROLLING");
-        SetMovementDistance(cube, 1);
+        SetMovementDistance(1);
         currentSpeed = Time.deltaTime * cube.acceleration;
-        InitDir(cube);
+        InitDir();
     }
 
-    public override void OnEnd(CubeController cube)
+    public override void OnEnd()
     {
         Debug.Log("END ROLLING");
         currentSpeed = 0;
@@ -26,7 +26,7 @@ public class RollingBehaviour : CubeBehaviour
         lastClimb = false;
     }
 
-    public void InitDir(CubeController cube)
+    public void InitDir()
     {
         currentSpeed = Mathf.Abs(currentSpeed);
         if(!climbing)
@@ -37,41 +37,47 @@ public class RollingBehaviour : CubeBehaviour
                 currentDir = (cube.forward * Input.GetAxis("Vertical")).normalized;
         }
         lastClimb = climbing;
-        if (cube.colHandler.IsCellEmpty(currentDir))
+        if (cube.colHandler.IsCellEmpty(Vector3.up))
         {
-            climbing = false;
-            SetMovementDistance(cube, 1);
-            StartRotation(cube, currentDir + Vector3.down, currentDir);
-            SetRotationSpeed(cube, currentSpeed);
+            if (cube.colHandler.IsCellEmpty(currentDir) && cube.colHandler.IsCellEmpty(currentDir + Vector3.up))
+            {
+                climbing = false;
+                SetMovementDistance(1);
+                StartRotation(currentDir + Vector3.down, currentDir);
+                SetRotationSpeed(currentSpeed);
+            }
+            else if (!climbing || cube.colHandler.IsCellEmpty(currentDir))
+            {
+                climbing = true;
+                lastClimb = false;
+                if (cube.colHandler.IsCellEmpty(currentDir + Vector3.up))
+                    SetMovementDistance(1);
+                else
+                    SetMovementDistance(1);
+                StartRotation(currentDir + Vector3.up, currentDir);
+                SetRotationSpeed(currentSpeed);
+            }
+            else if (cube.colHandler.IsCellEmpty(Vector3.down))
+            {
+                ChangeBehaviour("Falling");
+            }
+            else ChangeBehaviour("Standing");
+
         }
-        else if (!climbing)
-        {
-            climbing = true;
-            if (cube.colHandler.IsCellEmpty(currentDir + Vector3.up))
-                SetMovementDistance(cube, 1);
-            else
-                SetMovementDistance(cube, 1);
-            StartRotation(cube, currentDir + Vector3.up, currentDir);
-            SetRotationSpeed(cube, currentSpeed);
-        }
-        else if (cube.colHandler.IsCellEmpty(Vector3.down))
-        {
-            ChangeBehaviour(cube, "Falling");
-        }
-        else ChangeBehaviour(cube, "Standing");
+        else ChangeBehaviour("Standing");
     }
 
-    public override void OnGround(CubeController cube)
+    public override void OnGround()
     {
         Debug.Log("OnGround");
         if (!climbing && cube.colHandler.IsCellEmpty(Vector3.down))
-            ChangeBehaviour(cube, "Falling");
+            ChangeBehaviour("Falling");
         else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            InitDir(cube);
-        else ChangeBehaviour(cube, "Standing");
+            InitDir();
+        else ChangeBehaviour("Standing");
     }
 
-    public override void OnBack(CubeController cube)
+    public override void OnBack()
     {
         Debug.Log("OnBack");
         if(lastClimb)
@@ -81,10 +87,10 @@ public class RollingBehaviour : CubeBehaviour
             lastClimb = false;
         }
         else
-            OnGround(cube);
+            OnGround();
     }
 
-    public override void UpdateBehaviour(CubeController cube)
+    public override void UpdateBehaviour()
     {
         currentSpeed += Time.deltaTime * cube.acceleration * cube.GetInputWork();
         if (climbing)
@@ -97,6 +103,6 @@ public class RollingBehaviour : CubeBehaviour
         }
         if (currentSpeed > cube.maxSpeed)
             currentSpeed = cube.maxSpeed;
-        SetRotationSpeed(cube, currentSpeed);
+        SetRotationSpeed(currentSpeed);
     }
 }

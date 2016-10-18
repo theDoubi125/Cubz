@@ -7,36 +7,36 @@ public class FallingBehaviour : CubeBehaviour
 {
     private float currentSpeed;
 
-    public override void OnGround(CubeController cube)
+    public override void OnGround()
     {
-        SetMovementDistance(cube, 1);
+        SetMovementDistance(1);
         if (!cube.colHandler.IsCellEmpty(Vector3.down))
-            ChangeBehaviour(cube, "Standing");
+            ChangeBehaviour("Standing");
     }
 
-    public override void OnBack(CubeController cube)
+    public override void OnBack()
     {
-        OnGround(cube);
+        OnGround();
     }
 
-    public override void OnStart(CubeController cube)
+    public override void OnStart()
     {
         Debug.Log("START FALLING");
-        SetTranslation(cube, Vector3.down);
-        StartRotation(cube, Vector3.zero, Vector3.zero);
+        SetTranslation(Vector3.down);
+        StartRotation(Vector3.zero, Vector3.zero);
         currentSpeed = 0;
     }
 
-    public override void OnEnd(CubeController cube)
+    public override void OnEnd()
     {
         Debug.Log("END FALLING");
-        SetTranslation(cube, Vector3.zero);
+        SetTranslation(Vector3.zero);
     }
 
-    public override void UpdateBehaviour(CubeController cube)
+    public override void UpdateBehaviour()
     {
         currentSpeed += cube.gravity * Time.deltaTime;
-        SetRotationSpeed(cube, currentSpeed);
+        SetRotationSpeed(currentSpeed);
 
     }
 }
