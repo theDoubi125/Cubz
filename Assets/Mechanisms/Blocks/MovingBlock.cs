@@ -3,34 +3,85 @@ using System.Collections.Generic;
 
 public abstract class MovingBlock : MonoBehaviour
 {
-    private Vector3 velocity;
+    public float speed;
+    private Vector3 direction;
+    private float time, duration, pauseDuration;
 
-    private List<Transform> attachedCubes = new List<Transform>();
+    private List<CubeController> waitForAttach = new List<CubeController>();
+    private List<CubeController> waitForDetach = new List<CubeController>();
+    private List<CubeController> attachedCubes = new List<CubeController>();
+
+
+    void Start()
+    {
+        direction = GetNextDir();
+    }
 
     void Update()
     {
-        UpdateBlock();
-        transform.position += Time.deltaTime * velocity;
-        foreach(Transform cube in attachedCubes)
+        if(pauseDuration > 0)
         {
-            cube.position += Time.deltaTime * velocity;
+            pauseDuration -= Time.deltaTime;
+            UpdateAttach();
+            return;
+        }
+        if (time + Time.deltaTime > duration)
+        {
+            float deltaTime = duration - time;
+            Move(deltaTime * speed * direction);
+            Vector3 newDir = GetNextDir();
+            duration = newDir.magnitude / speed;
+            direction = newDir.normalized;
+            time = 0;
+            UpdateAttach();
+        }
+        else
+        {
+            Move(Time.deltaTime * speed * direction);
+            time += Time.deltaTime;
         }
     }
 
-    public abstract void UpdateBlock();
+    public abstract Vector3 GetNextDir();
 
-    public void AttachCube(Transform cube)
+    private void Move(Vector3 disp)
     {
-        attachedCubes.Add(cube);
+        transform.position += disp;
+        foreach (CubeController cube in attachedCubes)
+        {
+            cube.transform.position += disp;
+        }
     }
 
-    public void DetachCube(Transform cube)
+    public void AttachCube(CubeController cube)
     {
-        attachedCubes.Remove(cube);
+        if(!waitForAttach.Contains(cube))
+            waitForAttach.Add(cube);
+        waitForDetach.Remove(cube);
     }
 
-    protected void SetVelocity(Vector3 velocity)
+    public void DetachCube(CubeController cube)
     {
-        this.velocity = velocity;
+        if (!waitForDetach.Contains(cube))
+            waitForDetach.Add(cube);
+        waitForAttach.Remove(cube);
+    }
+
+    public void UpdateAttach()
+    {
+        foreach (CubeController cube in waitForAttach)
+        {
+            if (!attachedCubes.Contains(cube))
+                attachedCubes.Add(cube);
+        }
+        foreach(CubeController cube in waitForDetach)
+            attachedCubes.Remove(cube);
+        waitForAttach.Clear();
+        waitForDetach.Clear();
+    }
+
+    public void Pause(float duration)
+    {
+        pauseDuration = duration;
     }
 }

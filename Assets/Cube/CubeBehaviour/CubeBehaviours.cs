@@ -59,7 +59,7 @@ public abstract class CubeBehaviour : ScriptableObject
             MovingBlock block = collider.GetComponent<MovingBlock>();
             if (block)
             {
-                block.AttachCube(cube.transform);
+                block.AttachCube(cube);
                 attachedBlocks.Add(block);
             }
         }
@@ -69,7 +69,7 @@ public abstract class CubeBehaviour : ScriptableObject
     {
         foreach(MovingBlock attachedBlock in attachedBlocks)
         {
-            attachedBlock.DetachCube(cube.transform);
+            attachedBlock.DetachCube(cube);
         }
         attachedBlocks.Clear();
     }
@@ -81,7 +81,7 @@ public abstract class CubeBehaviour : ScriptableObject
             MovingBlock block = collider.GetComponent<MovingBlock>();
             if (block)
             {
-                block.DetachCube(cube.transform);
+                block.DetachCube(cube);
             }
         }
     }

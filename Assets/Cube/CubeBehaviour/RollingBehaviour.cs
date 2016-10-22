@@ -29,6 +29,7 @@ public class RollingBehaviour : CubeBehaviour
 
     public void InitDir()
     {
+        DetachAll();
         currentSpeed = Mathf.Abs(currentSpeed);
         if(!climbing)
         {
@@ -44,6 +45,7 @@ public class RollingBehaviour : CubeBehaviour
                 StartRotation(currentDir + Vector3.down, currentDir);
                 SetRotationSpeed(currentSpeed);
                 AttachTo(Vector3.down + currentDir);
+                AttachTo(Vector3.down);
             }
             else if (!climbing || cube.colHandler.IsCellEmpty(currentDir))
             {

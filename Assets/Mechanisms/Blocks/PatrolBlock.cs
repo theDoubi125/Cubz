@@ -1,64 +1,29 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class PatrolBlock : MovingBlock
 {
-    public Vector3[] targets;
-    public float travelSpeed;
-    public int initTarget;
-    public float waitTime;
-    private bool isWaiting;
-    private int currentTarget;
-    private float currentTime;
+    public List<Vector3> directions;
+    int currentPos = 0, currentIt = 0;
 
 	void Start ()
     {
-        currentTarget = (initTarget+1)%targets.Length;
-        transform.position = targets[lastTarget];
-        isWaiting = true;
+
     }
 	
-	public override void UpdateBlock ()
+	public override Vector3 GetNextDir()
     {
-        if(isWaiting)
+        Vector3 result = directions[currentPos];
+        if(currentIt == 0)
+            Pause(2);
+        currentIt++;
+        if(currentIt >= directions[currentPos].magnitude)
         {
-            SetVelocity(Vector3.zero);
-            currentTime += Time.deltaTime;
-            if (currentTime > waitTime)
-            {
-                currentTime = 0;
-                isWaiting = false;
-            }
+            currentIt = 0;
+            currentPos++;
+            if (currentPos >= directions.Count)
+                currentPos = 0;
         }
-        else
-        {
-            Vector3 traj = (targets[currentTarget] - targets[lastTarget]);
-            if (currentTime + Time.deltaTime > traj.magnitude)
-            {
-                float deltaTime = traj.magnitude - currentTime;
-                // Hack to get always exact positions (same as with cube movements)
-                SetVelocity((targets[currentTarget]-transform.position) / Time.deltaTime);
-                currentTarget++;
-                if (currentTarget >= targets.Length)
-                    currentTarget = 0;
-                currentTime = 0;
-                isWaiting = true;
-            }
-            else
-            {
-                currentTime += Time.deltaTime;
-                SetVelocity(travelSpeed * traj.normalized);
-            }
-        }
+        return result.normalized;
 	}
-
-    private int lastTarget
-    {
-        get
-        {
-            if (currentTarget == 0)
-                return targets.Length - 1;
-            return currentTarget - 1;
-        }
-    }
 }
