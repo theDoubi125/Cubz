@@ -1,10 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public enum Direction
 {
     Up, Down, Left, Right, Forward, Back, None
+}
+
+[Serializable]
+public class PushEffect
+{
+    public PushEffect(float duration, Vector3 speed)
+    {
+        this.duration = duration;
+        this.speed = speed;
+    }
+
+    [SerializeField]
+    public float duration;
+
+    [SerializeField]
+    public Vector3 speed;
 }
 
 public class CubeController : MonoBehaviour
@@ -29,6 +46,8 @@ public class CubeController : MonoBehaviour
     public Vector3 right, forward;
 
     public Dictionary<string, CubeBehaviour> behaviours;
+
+    public Dictionary<MovingBlock, PushEffect> pushes = new Dictionary<MovingBlock, PushEffect>();
 
 	void Start ()
     {
@@ -149,6 +168,20 @@ public class CubeController : MonoBehaviour
         }
         else
             currentPos += deltaTime * currentSpeed;
+        List<MovingBlock> toRemove = new List<MovingBlock>();
+        foreach(KeyValuePair<MovingBlock, PushEffect> push in pushes)
+        {
+            if (pushes[push.Key].duration > 0)
+            {
+                transform.position += Mathf.Min(push.Value.duration, Time.deltaTime) * push.Value.speed;
+                pushes[push.Key].duration -= Time.deltaTime;
+            }
+            else toRemove.Add(push.Key);
+        }
+        foreach(MovingBlock block in toRemove)
+        {
+            pushes.Remove(block);
+        }
     }
 
     private void ComputeInputVectors()
@@ -175,4 +208,14 @@ public class CubeController : MonoBehaviour
     }
 
     public Vector3 inputVector { get { return right * Input.GetAxis("Horizontal") + forward * Input.GetAxis("Vertical"); } }
+
+    public void PushedBy(MovingBlock block)
+    {
+        if (!pushes.ContainsKey(block))
+        {
+            pushes[block] = new PushEffect(block.speed, block.direction);
+            transform.position += pushes[block].speed * Time.deltaTime;
+            pushes[block].duration -= Time.deltaTime;
+        }
+    }
 }

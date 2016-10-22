@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public abstract class MovingBlock : MonoBehaviour
 {
     public float speed;
-    private Vector3 direction;
+    public Vector3 direction;
     private float time, duration, pauseDuration;
 
     private List<CubeController> waitForAttach = new List<CubeController>();
@@ -83,5 +83,27 @@ public abstract class MovingBlock : MonoBehaviour
     public void Pause(float duration)
     {
         pauseDuration = duration;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        print("Collision " + other);
+        CubeController cube = other.GetComponent<CubeController>();
+        if(cube != null)
+        {
+            cube.PushedBy(this);
+        }
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        if (pauseDuration > 0)
+            return;
+        print("Collision " + other);
+        CubeController cube = other.GetComponent<CubeController>();
+        if (cube != null)
+        {
+            cube.PushedBy(this);
+        }
     }
 }
