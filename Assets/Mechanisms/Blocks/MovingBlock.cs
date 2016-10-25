@@ -6,6 +6,7 @@ public abstract class MovingBlock : MonoBehaviour
     public float speed;
     public Vector3 direction;
     private float time, duration, pauseDuration;
+	private Vector3 pauseDirection;
 
     private List<CubeController> waitForAttach = new List<CubeController>();
     private List<CubeController> waitForDetach = new List<CubeController>();
@@ -22,10 +23,12 @@ public abstract class MovingBlock : MonoBehaviour
         if(pauseDuration > 0)
         {
             pauseDuration -= Time.deltaTime;
+			if (pauseDuration < 0)
+				direction = pauseDirection;
             UpdateAttach();
             return;
         }
-        if (time + Time.deltaTime > duration)
+        else if (time + Time.deltaTime > duration)
         {
             float deltaTime = duration - time;
             Move(deltaTime * speed * direction);
@@ -83,6 +86,8 @@ public abstract class MovingBlock : MonoBehaviour
     public void Pause(float duration)
     {
         pauseDuration = duration;
+		pauseDirection = direction;
+		direction = Vector3.zero;
     }
 
     void OnTriggerEnter(Collider other)

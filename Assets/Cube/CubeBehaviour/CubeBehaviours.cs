@@ -52,17 +52,17 @@ public abstract class CubeBehaviour : ScriptableObject
         this.cube = cube;
     }
 
-    public void AttachTo(Vector3 pos)
+    public MovingBlock GetMovingBlockAt(Vector3 pos)
     {
         foreach (Collider collider in cube.colHandler.GetCollidingEntities(pos))
         {
             MovingBlock block = collider.GetComponent<MovingBlock>();
             if (block)
             {
-                block.AttachCube(cube);
-                attachedBlocks.Add(block);
+                return block;
             }
         }
+		return null;
     }
 
     public void DetachAll()

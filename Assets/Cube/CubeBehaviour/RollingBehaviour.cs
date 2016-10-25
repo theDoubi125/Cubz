@@ -44,8 +44,6 @@ public class RollingBehaviour : CubeBehaviour
                 SetMovementDistance(1);
                 StartRotation(currentDir + Vector3.down, currentDir);
                 SetRotationSpeed(currentSpeed);
-                AttachTo(Vector3.down + currentDir);
-                AttachTo(Vector3.down);
             }
             else if (!climbing || cube.colHandler.IsCellEmpty(currentDir))
             {
@@ -57,8 +55,6 @@ public class RollingBehaviour : CubeBehaviour
                     SetMovementDistance(1);
                 StartRotation(currentDir + Vector3.up, currentDir);
                 SetRotationSpeed(currentSpeed);
-                AttachTo(currentDir);
-                AttachTo(currentDir + Vector3.up);
             }
             else if (cube.colHandler.IsCellEmpty(Vector3.down))
             {
@@ -100,6 +96,13 @@ public class RollingBehaviour : CubeBehaviour
             currentSpeed -= cube.gravity * Time.deltaTime;
         else
         {
+			MovingBlock attachedBlock = GetMovingBlockAt(Vector3.down);
+			if(attachedBlock == null)
+				attachedBlock = GetMovingBlockAt (Vector3.down);
+
+			if(attachedBlock != null)
+				cube.PushedBy (attachedBlock);
+				
             if (cube.currentPos < 0.5f)
                 currentSpeed -= cube.gravity * Time.deltaTime;
             else currentSpeed += cube.gravity * Time.deltaTime;
