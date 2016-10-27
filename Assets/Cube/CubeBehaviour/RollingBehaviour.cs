@@ -12,7 +12,6 @@ public class RollingBehaviour : CubeBehaviour
 
     public override void OnStart()
     {
-        Debug.Log("START ROLLING");
         SetMovementDistance(1);
         currentSpeed = Time.deltaTime * cube.acceleration;
         InitDir();
@@ -20,7 +19,6 @@ public class RollingBehaviour : CubeBehaviour
 
     public override void OnEnd()
     {
-        Debug.Log("END ROLLING");
         currentSpeed = 0;
         climbing = false;
         lastClimb = false;
@@ -68,7 +66,6 @@ public class RollingBehaviour : CubeBehaviour
 
     public override void OnGround()
     {
-        Debug.Log("OnGround");
         if (!climbing && cube.colHandler.IsCellEmpty(Vector3.down))
             ChangeBehaviour("Falling");
         else if (cube.GetMainInputDirection().sqrMagnitude > 0)
@@ -78,7 +75,6 @@ public class RollingBehaviour : CubeBehaviour
 
     public override void OnBack()
     {
-        Debug.Log("OnBack");
         if(lastClimb)
         {
             cube.ReverseMovement();
@@ -96,13 +92,6 @@ public class RollingBehaviour : CubeBehaviour
             currentSpeed -= cube.gravity * Time.deltaTime;
         else
         {
-			MovingBlock attachedBlock = GetMovingBlockAt(Vector3.down);
-			if(attachedBlock == null)
-				attachedBlock = GetMovingBlockAt (Vector3.down);
-
-			if(attachedBlock != null)
-				cube.PushedBy (attachedBlock);
-				
             if (cube.currentPos < 0.5f)
                 currentSpeed -= cube.gravity * Time.deltaTime;
             else currentSpeed += cube.gravity * Time.deltaTime;

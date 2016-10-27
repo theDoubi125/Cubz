@@ -7,6 +7,7 @@ public class LaserSource : MonoBehaviour
     public float maxRange = 10;
     public Color laserColor;
     public bool activated;
+    private LaserReceptor currentTarget;
 
 	void Start ()
     {
@@ -27,8 +28,14 @@ public class LaserSource : MonoBehaviour
         {
             lineRenderer.SetPosition(1, hit.point);
             LaserReceptor receptor = hit.transform.GetComponent<LaserReceptor>();
-            if (receptor)
-                receptor.OnLaserHit(laserColor);
+            if (receptor != currentTarget)
+            {
+                if (currentTarget != null)
+                    currentTarget.OnLaserStopped(this);
+                if(receptor != null)
+                    receptor.OnLaserReceived(this);
+                currentTarget = receptor;
+            }
         }
         else
             lineRenderer.SetPosition(1, transform.position + transform.right * maxRange);

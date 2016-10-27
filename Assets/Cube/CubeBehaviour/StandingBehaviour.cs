@@ -7,7 +7,6 @@ public class StandingBehaviour : CubeBehaviour
 {
     public override void OnStart()
     {
-        Debug.Log("START STANDING");
         SetRotationSpeed(0);
         SetMovementDistance(1);
         //AttachTo(Vector3.down);
@@ -15,7 +14,6 @@ public class StandingBehaviour : CubeBehaviour
 
     public override void OnEnd()
     {
-        Debug.Log("END STANDING");
         //DetachTo(Vector3.down);
     }
 
@@ -35,8 +33,5 @@ public class StandingBehaviour : CubeBehaviour
             ChangeBehaviour("Falling");
         else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             ChangeBehaviour("Rolling");
-		MovingBlock attachedBlock = GetMovingBlockAt(Vector3.down);
-		if (attachedBlock != null)
-			cube.PushedBy (attachedBlock);
     }
 }

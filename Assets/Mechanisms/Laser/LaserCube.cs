@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LaserCube : LaserReceptor
+public class LaserCube
 {
-    public override void OnActivation()
-    {
-        print("OnActivation!!!");
-        GetComponent<LaserSource>().activated = true;
-    }
+    
 }

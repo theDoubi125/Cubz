@@ -21,7 +21,6 @@ public class FallingBehaviour : CubeBehaviour
 
     public override void OnStart()
     {
-        Debug.Log("START FALLING");
         SetTranslation(Vector3.down);
         StartRotation(Vector3.zero, Vector3.zero);
         currentSpeed = 0;
@@ -29,7 +28,6 @@ public class FallingBehaviour : CubeBehaviour
 
     public override void OnEnd()
     {
-        Debug.Log("END FALLING");
         SetTranslation(Vector3.zero);
     }
 

@@ -22,7 +22,6 @@ public abstract class CubeBehaviour : ScriptableObject
 
     public void SetTranslation(Vector3 disp)
     {
-        Debug.Log("Set Translation " + disp);
         cube.SetTranslationVelocity(disp);
     }
 
@@ -69,7 +68,7 @@ public abstract class CubeBehaviour : ScriptableObject
     {
         foreach(MovingBlock attachedBlock in attachedBlocks)
         {
-            attachedBlock.DetachCube(cube);
+            //attachedBlock.DetachCube(cube);
         }
         attachedBlocks.Clear();
     }
@@ -81,7 +80,7 @@ public abstract class CubeBehaviour : ScriptableObject
             MovingBlock block = collider.GetComponent<MovingBlock>();
             if (block)
             {
-                block.DetachCube(cube);
+                //block.DetachCube(cube);
             }
         }
     }

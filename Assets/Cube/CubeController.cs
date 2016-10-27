@@ -28,7 +28,6 @@ public class CubeController : MonoBehaviour
 {
     public float cellSize;
 
-    private Direction movingDir = Direction.None;
     private float movingTime;
 
     private Vector3 rotCenter;
@@ -213,7 +212,7 @@ public class CubeController : MonoBehaviour
     {
         if (!pushes.ContainsKey(block))
         {
-            pushes[block] = new PushEffect(block.speed, block.direction);
+            pushes[block] = new PushEffect(block.speed, block.currentDirection);
             transform.position += pushes[block].speed * Time.deltaTime;
             pushes[block].duration -= Time.deltaTime;
         }
