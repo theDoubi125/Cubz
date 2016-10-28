@@ -22,12 +22,10 @@ public class RollingBehaviour : CubeBehaviour
         currentSpeed = 0;
         climbing = false;
         lastClimb = false;
-        DetachAll();
     }
 
     public void InitDir()
     {
-        DetachAll();
         currentSpeed = Mathf.Abs(currentSpeed);
         if(!climbing)
         {

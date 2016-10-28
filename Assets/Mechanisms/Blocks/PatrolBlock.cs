@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class PatrolBlock : MovingBlock
 {
     public List<Vector3> directions;
-    private int currentPos = 0, currentIt = 0;
+    private int currentPos = 0;
     private float pauseTime;
     public float pauseDuration;
 

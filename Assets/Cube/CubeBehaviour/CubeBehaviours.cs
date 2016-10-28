@@ -63,25 +63,4 @@ public abstract class CubeBehaviour : ScriptableObject
         }
 		return null;
     }
-
-    public void DetachAll()
-    {
-        foreach(MovingBlock attachedBlock in attachedBlocks)
-        {
-            //attachedBlock.DetachCube(cube);
-        }
-        attachedBlocks.Clear();
-    }
-
-    public void DetachTo(Vector3 pos)
-    {
-        foreach (Collider collider in cube.colHandler.GetCollidingEntities(pos))
-        {
-            MovingBlock block = collider.GetComponent<MovingBlock>();
-            if (block)
-            {
-                //block.DetachCube(cube);
-            }
-        }
-    }
 }

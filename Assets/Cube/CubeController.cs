@@ -26,6 +26,7 @@ public class PushEffect
 
 public class CubeController : MonoBehaviour
 {
+    public bool hasFocus;
     public float cellSize;
 
     private float movingTime;
@@ -200,6 +201,8 @@ public class CubeController : MonoBehaviour
 
     public Vector3 GetMainInputDirection()
     {
+        if (!hasFocus)
+            return Vector3.zero;
         if (Mathf.Abs(Input.GetAxis("Horizontal")) > Mathf.Abs(Input.GetAxis("Vertical")))
             return(right * Input.GetAxis("Horizontal")).normalized;
         else
