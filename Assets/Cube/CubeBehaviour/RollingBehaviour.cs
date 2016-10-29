@@ -41,14 +41,10 @@ public class RollingBehaviour : CubeBehaviour
                 StartRotation(currentDir + Vector3.down, currentDir);
                 SetRotationSpeed(currentSpeed);
             }
-            else if (!climbing || cube.colHandler.IsCellEmpty(currentDir))
+            else if ((!climbing || cube.colHandler.IsCellEmpty(currentDir)) && cube.colHandler.IsCellEmpty(-currentDir) && cube.colHandler.IsCellEmpty(-currentDir + Vector3.up))
             {
                 climbing = true;
                 lastClimb = false;
-                if (cube.colHandler.IsCellEmpty(currentDir + Vector3.up))
-                    SetMovementDistance(1);
-                else
-                    SetMovementDistance(1);
                 StartRotation(currentDir + Vector3.up, currentDir);
                 SetRotationSpeed(currentSpeed);
             }
