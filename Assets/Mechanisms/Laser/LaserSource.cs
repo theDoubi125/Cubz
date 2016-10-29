@@ -12,6 +12,7 @@ public class LaserSource : MonoBehaviour
 	void Start ()
     {
         lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.SetColors(laserColor, laserColor);
 	}
 	
 	void Update ()
