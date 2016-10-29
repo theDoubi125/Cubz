@@ -2,39 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollisionHandler : MonoBehaviour
+public class CollisionHandler
 {
-    int collisionMask;
-    void Start()
-    {
-        collisionMask = LayerMask.GetMask("Default");
-    }
-    void OnDrawGizmos()
-    {
-        Gizmos.color = new Color(1, 0, 0, 0.3f);
+    private int collisionMask;
+    private Transform target;
 
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                for (int k = 0; k < 3; k++)
-                {
-                    if (GetCollidingEntities(i - 1, j - 1, k - 1).Length > 0)
-                        Gizmos.DrawCube(transform.position + Vector3.right * (i - 1) + Vector3.up * (j - 1) + Vector3.forward * (k - 1), new Vector3(1.01f, 1.01f, 1.01f));
-                }
-            }
-        }
-    }
-
-    void Update()
+    public CollisionHandler(Transform target, int collisionMask)
     {
-        
+        this.target = target;
+        this.collisionMask = collisionMask;
     }
 
     public Collider[] GetCollidingEntities(int x, int y, int z)
     {
 		//return Physics.OverlapBox(transform.position + Vector3.right * x + Vector3.up * y + Vector3.forward * z, new Vector3(0.499f, 0.499f, 0.499f));
-		return Physics.OverlapBox(transform.position + Vector3.right * x + Vector3.up * y + Vector3.forward * z, new Vector3(0.499f, 0.499f, 0.499f), Quaternion.identity, collisionMask);
+		return Physics.OverlapBox(target.position + Vector3.right * x + Vector3.up * y + Vector3.forward * z, new Vector3(0.499f, 0.499f, 0.499f), Quaternion.identity, collisionMask);
     }
 
     public bool IsCellEmpty(int x, int y, int z)
@@ -45,7 +27,7 @@ public class CollisionHandler : MonoBehaviour
     public Collider[] GetCollidingEntities(Vector3 pos)
     {
 		//return Physics.OverlapBox(transform.position + Vector3.right * pos.x + Vector3.up * pos.y + Vector3.forward * pos.z, new Vector3(0.499f, 0.499f, 0.499f));
-		return Physics.OverlapBox(transform.position + Vector3.right * pos.x + Vector3.up * pos.y + Vector3.forward * pos.z, new Vector3(0.499f, 0.499f, 0.499f), Quaternion.identity, collisionMask);
+        return Physics.OverlapBox(target.position + Vector3.right * pos.x + Vector3.up * pos.y + Vector3.forward * pos.z, new Vector3(0.499f, 0.499f, 0.499f), Quaternion.identity, collisionMask);
     }
 
     public bool IsCellEmpty(Vector3 pos)

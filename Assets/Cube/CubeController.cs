@@ -51,7 +51,7 @@ public class CubeController : MonoBehaviour
 
 	void Start ()
     {
-        colHandler = GetComponent<CollisionHandler>();
+        colHandler = new CollisionHandler(transform, LayerMask.GetMask("Default"));
         behaviours = new Dictionary<string, CubeBehaviour>();
         behaviours.Add("Standing", ScriptableObject.CreateInstance<StandingBehaviour>());
         behaviours.Add("Rolling", ScriptableObject.CreateInstance<RollingBehaviour>());
@@ -160,6 +160,9 @@ public class CubeController : MonoBehaviour
 
         if (isOnGround)
         {
+            transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
+            Vector3 rotationAngles = transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.Euler(new Vector3(Mathf.Round(rotationAngles.x), Mathf.Round(rotationAngles.y), Mathf.Round(rotationAngles.z)));
             behaviour.OnGround();
         }
         else if(isBack)

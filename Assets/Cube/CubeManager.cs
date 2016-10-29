@@ -7,6 +7,8 @@ public class CubeManager : MonoBehaviour
     public CameraController mainCamera;
     public int currentFocus = 0;
 
+    public Transform currentCube { get { return controllers[currentFocus].transform; } }
+
     public void Start()
     {
         UpdateFocus();

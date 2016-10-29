@@ -9,19 +9,19 @@ public abstract class MovingBlock : MonoBehaviour
 
     public Vector3 currentDirection { get { return direction; } }
 
-    private List<CubeController> waitForAttach = new List<CubeController>();
-    private List<CubeController> waitForDetach = new List<CubeController>();
-    private List<CubeController> attachedCubes = new List<CubeController>();
+    private CollisionHandler colHandler;
 
 
     void Start()
     {
-        
+        colHandler = new CollisionHandler(transform, LayerMask.GetMask("Default"));
     }
 
     void Update()
     {
         UpdateMovement();
+        foreach (Collider collider in colHandler.GetCollidingEntities(Vector3.zero))
+            OnCollision(collider);
         if (duration > 0)
         {
             float deltaTime = Mathf.Min(Time.deltaTime, duration);
@@ -42,16 +42,7 @@ public abstract class MovingBlock : MonoBehaviour
     public abstract void UpdateMovement();
     public abstract void OnMovementFinished();
 
-    void OnTriggerEnter(Collider collider)
-    {
-        CubeController controller = collider.GetComponent<CubeController>();
-        if (controller)
-        {
-            controller.PushedBy(this);
-        }
-    }
-
-    void OnTriggerStay(Collider collider)
+    void OnCollision(Collider collider)
     {
         CubeController controller = collider.GetComponent<CubeController>();
         if (controller)
