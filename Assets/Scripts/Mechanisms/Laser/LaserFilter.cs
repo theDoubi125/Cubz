@@ -2,43 +2,46 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserReflector : LaserSource, LaserReceptor
+public class LaserFilter : LaserSource, LaserReceptor
 {
     private List<LaserSource> InLasers = new List<LaserSource>();
+
+    public Color FilterColor;
 
     public void OnLaserReceived(LaserSource source, RaycastHit hit)
     {
         activated = true;
         InLasers.Add(source);
-        UpdateColor();
+        SetLaserDirection(source.laserDirection);
+        laserStart = hit.point - transform.position;
+        UpdateLaser();
     }
 
     public void OnLaserStopped(LaserSource source)
     {
         InLasers.Remove(source);
-        UpdateColor();
+        UpdateLaser();
     }
 
     public void OnLaserUpdate(LaserSource source, RaycastHit hit)
     {
-        
+        laserStart = hit.point - transform.position;
     }
 
-    public void UpdateColor()
+    public void UpdateLaser()
     {
         if (InLasers.Count == 0)
         {
             activated = false;
             return;
         }
-        Color resultColor = new Color(0, 0, 0);
-        foreach (LaserSource source in InLasers)
-        {
-            resultColor.r += source.laserColor.r;
-            resultColor.g += source.laserColor.g;
-            resultColor.b += source.laserColor.b;
-        }
+        Color resultColor = InLasers[0].laserColor;
+
+        resultColor.r *= FilterColor.r;
+        resultColor.g *= FilterColor.g;
+        resultColor.b *= FilterColor.b;
         laserColor = resultColor;
+
         UpdateLaserColor();
     }
 }
