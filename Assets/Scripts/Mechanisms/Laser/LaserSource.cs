@@ -12,7 +12,7 @@ public class LaserSource : MonoBehaviour
 	void Start ()
     {
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.SetColors(laserColor, laserColor);
+        UpdateLaserColor();
 	}
 	
 	void Update ()
@@ -41,4 +41,10 @@ public class LaserSource : MonoBehaviour
         else
             lineRenderer.SetPosition(1, transform.position + transform.right * maxRange);
 	}
+
+    public void UpdateLaserColor()
+    {
+        lineRenderer.SetColors(laserColor, laserColor);
+    }
+        
 }
