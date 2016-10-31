@@ -3,14 +3,23 @@ using System.Collections.Generic;
 
 public class CubeManager : MonoBehaviour
 {
-    public List<CubeController> controllers = new List<CubeController>();
+    private List<CubeController> controllers = new List<CubeController>();
     public CameraController mainCamera;
-    public int currentFocus = 0;
+    private int currentFocus = 0;
 
     public Transform currentCube { get { return controllers[currentFocus].transform; } }
 
     public void Start()
     {
+        Debug.Log("Start Test");
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            Debug.Log(obj);
+
+            CubeController controller = obj.GetComponent<CubeController>();
+            if(controller != null)
+                controllers.Add(controller);
+        }
         UpdateFocus();
     }
 

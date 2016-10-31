@@ -16,8 +16,11 @@ public class LaserSource : MonoBehaviour
         }
         set
         {
+            bool mustUpdate = false;
+            if (!value && _activated)
+                mustUpdate = true;
             _activated = value;
-            if (!_activated && currentTarget != null)
+            if (mustUpdate && currentTarget != null)
             {
                 currentTarget.OnLaserStopped(this);
                 currentTarget = null;
@@ -53,12 +56,13 @@ public class LaserSource : MonoBehaviour
 	void Update ()
     {
         lineRenderer.SetPosition(0, transform.position + laserStart);
-        if (!activated)
+        if (!activated || laserColor == Color.black)
         {
             lineRenderer.SetPosition(1, transform.position + laserStart);
             return;
         }
-        Ray ray = new Ray(transform.position + laserStart, customDirection?laserDirection:transform.right);
+        Vector3 direction = customDirection ? laserDirection : transform.right;
+        Ray ray = new Ray(transform.position + laserStart + direction*0.01f, direction);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, maxRange))
         {

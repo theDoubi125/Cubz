@@ -26,6 +26,7 @@ public class LaserFilter : LaserSource, LaserReceptor
     public void OnLaserUpdate(LaserSource source, RaycastHit hit)
     {
         laserStart = hit.point - transform.position;
+        SetLaserDirection(source.laserDirection);
     }
 
     public void UpdateLaser()
