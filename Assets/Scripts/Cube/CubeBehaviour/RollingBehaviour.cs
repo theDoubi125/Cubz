@@ -62,7 +62,7 @@ public class RollingBehaviour : CubeBehaviour
     {
         if (!climbing && cube.colHandler.IsCellEmpty(Vector3.down))
             ChangeBehaviour("Falling");
-        else if (cube.GetMainInputDirection().sqrMagnitude > 0)
+        else if (cube.GetMainInputDirection().sqrMagnitude > 0 || climbing)
             InitDir();
         else ChangeBehaviour("Standing");
     }
