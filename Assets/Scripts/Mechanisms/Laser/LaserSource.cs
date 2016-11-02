@@ -3,11 +3,14 @@ using System.Collections;
 
 public class LaserSource : MonoBehaviour
 {
-    private LineRenderer lineRenderer;
-    public float maxRange = 10;
+    public float maxRange = 10, thickness = 0.1f;
+    public Material laserMaterial;
     public Color laserColor;
     public bool activateAtStart;
+
     private bool _activated;
+    private LineRenderer lineRenderer;
+
     public bool activated
     {
         get
@@ -46,11 +49,25 @@ public class LaserSource : MonoBehaviour
     public Vector3 laserStart;
     public bool customDirection = false;
 
+    public void Init(float thickness, Material material, Color color, bool active)
+    {
+        this.thickness = thickness;
+        laserMaterial = material;
+        laserColor = color;
+        activateAtStart = active;
+    }
+
 	void Start ()
     {
-        lineRenderer = GetComponent<LineRenderer>();
-        UpdateLaserColor();
         activated = activateAtStart;
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.SetColors(laserColor, laserColor);
+        lineRenderer.SetVertexCount(2);
+        lineRenderer.SetPosition(0, Vector3.zero);
+        lineRenderer.SetPosition(1, Vector3.zero);
+        lineRenderer.SetWidth(thickness, thickness);
+        lineRenderer.material = laserMaterial;
+        UpdateLaserColor();
 	}
 	
 	void Update ()

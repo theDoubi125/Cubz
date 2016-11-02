@@ -2,48 +2,47 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserFilter : LaserSource, LaserReceptor
+public class LaserFilter : MonoBehaviour, LaserReceptor
 {
     private List<LaserSource> InLasers = new List<LaserSource>();
+    private List<LaserSource> OutLasers = new List<LaserSource>();
+
+    private Dictionary<LaserSource, LaserSource> lasers = new Dictionary<LaserSource, LaserSource>();
 
     public Color FilterColor;
 
     public void OnLaserReceived(LaserSource source, RaycastHit hit)
     {
-        activated = true;
         InLasers.Add(source);
-        SetLaserDirection(source.laserDirection);
-        laserStart = hit.point - transform.position;
-        UpdateLaser();
+        AddLaser(source, hit);
     }
 
     public void OnLaserStopped(LaserSource source)
     {
         InLasers.Remove(source);
-        UpdateLaser();
+        GameObject.Destroy(lasers[source].gameObject);
+        lasers.Remove(source);
     }
 
     public void OnLaserUpdate(LaserSource source, RaycastHit hit)
     {
-        laserStart = hit.point - transform.position;
-        SetLaserDirection(source.laserDirection);
+        lasers[source].transform.position = hit.point;
+        lasers[source].SetLaserDirection(source.laserDirection);
     }
 
-    public void UpdateLaser()
+    public void AddLaser(LaserSource inLaser, RaycastHit hit)
     {
-        if (InLasers.Count == 0)
-        {
-            activated = false;
-            return;
-        }
-        Color resultColor = InLasers[0].laserColor;
-
-        resultColor.r *= FilterColor.r;
-        resultColor.g *= FilterColor.g;
-        resultColor.b *= FilterColor.b;
-        laserColor = resultColor;
-
-        UpdateLaserColor();
+        GameObject obj = new GameObject();
+        obj.transform.parent = transform;
+        obj.transform.position = hit.point;
+        LaserSource outLaser = obj.AddComponent<LaserSource>();
+        Color color = new Color(
+                          inLaser.laserColor.r * FilterColor.r,
+                          inLaser.laserColor.g * FilterColor.g,
+                          inLaser.laserColor.b * FilterColor.b);
+            
+        outLaser.Init(inLaser.thickness, inLaser.laserMaterial, color, true);
+        lasers[inLaser] = outLaser;
     }
 }
 
