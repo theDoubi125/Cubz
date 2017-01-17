@@ -20,8 +20,8 @@ public abstract class MovingBlock : MonoBehaviour
     void Update()
     {
         UpdateMovement();
-        foreach (Collider collider in colHandler.GetCollidingEntities(Vector3.zero))
-            OnCollision(collider);
+        //foreach (Collider collider in colHandler.GetCollidingEntities(Vector3.zero))
+        //    OnCollision(collider);
         if (duration > 0)
         {
             float deltaTime = Mathf.Min(Time.deltaTime, duration);

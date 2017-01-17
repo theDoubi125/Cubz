@@ -6,49 +6,49 @@ using UnityEngine;
 [CreateAssetMenu]
 public class RollingBehaviour : CubeBehaviour
 {
-    private bool climbing, lastClimb;
-    private Vector3 currentDir;
-    private float currentSpeed;
+    private bool m_climbing, m_lastClimb;
+    private Vector3 m_currentDir;
+    private float m_currentSpeed;
 
     public override void OnStart()
     {
         SetMovementDistance(1);
-        currentSpeed = Time.deltaTime * cube.acceleration;
+        m_currentSpeed = Time.deltaTime * m_cube.acceleration;
         InitDir();
     }
 
     public override void OnEnd()
     {
-        currentSpeed = 0;
-        climbing = false;
-        lastClimb = false;
+        m_currentSpeed = 0;
+        m_climbing = false;
+        m_lastClimb = false;
     }
 
     public void InitDir()
     {
-        currentSpeed = Mathf.Abs(currentSpeed);
-        if(!climbing)
+        m_currentSpeed = Mathf.Abs(m_currentSpeed);
+        if(!m_climbing)
         {
-            currentDir = cube.GetMainInputDirection();
+            m_currentDir = m_cube.GetMainInputDirection();
         }
-        lastClimb = climbing;
-        if (cube.colHandler.IsCellEmpty(Vector3.up))
+        m_lastClimb = m_climbing;
+        if (m_cube.colHandler.IsCellEmpty(Vector3.up))
         {
-            if (cube.colHandler.IsCellEmpty(currentDir) && cube.colHandler.IsCellEmpty(currentDir + Vector3.up))
+            if (m_cube.colHandler.IsCellEmpty(m_currentDir) && m_cube.colHandler.IsCellEmpty(m_currentDir + Vector3.up))
             {
-                climbing = false;
+                m_climbing = false;
                 SetMovementDistance(1);
-                StartRotation(currentDir + Vector3.down, currentDir);
-                SetRotationSpeed(currentSpeed);
+                StartRotation(m_currentDir + Vector3.down, m_currentDir);
+                SetRotationSpeed(m_currentSpeed);
             }
-            else if ((!climbing || cube.colHandler.IsCellEmpty(currentDir)) && cube.colHandler.IsCellEmpty(-currentDir) && cube.colHandler.IsCellEmpty(-currentDir + Vector3.up))
+            else if ((!m_climbing || m_cube.colHandler.IsCellEmpty(m_currentDir)) && m_cube.colHandler.IsCellEmpty(-m_currentDir) && m_cube.colHandler.IsCellEmpty(-m_currentDir + Vector3.up))
             {
-                climbing = true;
-                lastClimb = false;
-                StartRotation(currentDir + Vector3.up, currentDir);
-                SetRotationSpeed(currentSpeed);
+                m_climbing = true;
+                m_lastClimb = false;
+                StartRotation(m_currentDir + Vector3.up, m_currentDir);
+                SetRotationSpeed(m_currentSpeed);
             }
-            else if (cube.colHandler.IsCellEmpty(Vector3.down))
+            else if (m_cube.colHandler.IsCellEmpty(Vector3.down))
             {
                 ChangeBehaviour("Falling");
             }
@@ -60,20 +60,20 @@ public class RollingBehaviour : CubeBehaviour
 
     public override void OnGround()
     {
-        if (!climbing && cube.colHandler.IsCellEmpty(Vector3.down))
+        if (!m_climbing && m_cube.colHandler.IsCellEmpty(Vector3.down))
             ChangeBehaviour("Falling");
-        else if (cube.GetMainInputDirection().sqrMagnitude > 0 || climbing)
+        else if (m_cube.GetMainInputDirection().sqrMagnitude > 0 || m_climbing)
             InitDir();
         else ChangeBehaviour("Standing");
     }
 
     public override void OnBack()
     {
-        if(lastClimb)
+        if(m_lastClimb)
         {
-            cube.ReverseMovement();
-            climbing = true;
-            lastClimb = false;
+            m_cube.ReverseMovement();
+            m_climbing = true;
+            m_lastClimb = false;
         }
         else
             OnGround();
@@ -81,17 +81,17 @@ public class RollingBehaviour : CubeBehaviour
 
     public override void UpdateBehaviour()
     {
-        currentSpeed += Time.deltaTime * cube.acceleration * cube.GetInputWork();
-        if (climbing)
-            currentSpeed -= cube.gravity * Time.deltaTime;
+        m_currentSpeed += Time.deltaTime * m_cube.acceleration * m_cube.GetInputWork();
+        if (m_climbing)
+            m_currentSpeed -= m_cube.gravity * Time.deltaTime;
         else
         {
-            if (cube.currentPos < 0.5f)
-                currentSpeed -= cube.gravity * Time.deltaTime;
-            else currentSpeed += cube.gravity * Time.deltaTime;
+            if (m_cube.currentPos < 0.5f)
+                m_currentSpeed -= m_cube.gravity * Time.deltaTime;
+            else m_currentSpeed += m_cube.gravity * Time.deltaTime;
         }
-        if (currentSpeed > cube.maxSpeed)
-            currentSpeed = cube.maxSpeed;
-        SetRotationSpeed(currentSpeed);
+        if (m_currentSpeed > m_cube.maxSpeed)
+            m_currentSpeed = m_cube.maxSpeed;
+        SetRotationSpeed(m_currentSpeed);
     }
 }

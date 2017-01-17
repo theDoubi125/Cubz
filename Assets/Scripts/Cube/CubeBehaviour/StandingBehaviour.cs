@@ -29,7 +29,7 @@ public class StandingBehaviour : CubeBehaviour
 
     public override void UpdateBehaviour()
     {
-        if (cube.colHandler.IsCellEmpty(Vector3.down))
+        if (m_cube.colHandler.IsCellEmpty(Vector3.down))
             ChangeBehaviour("Falling");
         else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
             ChangeBehaviour("Rolling");

@@ -5,9 +5,9 @@ using UnityEngine;
 
 public abstract class CubeBehaviour : ScriptableObject
 {
-    Vector3 rotationCenter;
-    protected CubeController cube;
-    List<MovingBlock> attachedBlocks = new List<MovingBlock>();
+    private Vector3 m_rotationCenter;
+    protected CubeController m_cube;
+    private List<MovingBlock> m_attachedBlocks = new List<MovingBlock>();
 
     public abstract void OnStart();
     public abstract void UpdateBehaviour();
@@ -17,43 +17,43 @@ public abstract class CubeBehaviour : ScriptableObject
 
     public void StartRotation(Vector3 pos, Vector3 dir)
     {
-        cube.StartRotation(pos, dir);
+        m_cube.StartRotation(pos, dir);
     }
 
     public void SetTranslation(Vector3 disp)
     {
-        cube.SetTranslationVelocity(disp);
+        m_cube.SetTranslationVelocity(disp);
     }
 
     public void SetMovementDistance(float distance)
     {
-        cube.SetMovementDistance(distance);
+        m_cube.SetMovementDistance(distance);
     }
 
     public void Translate(Vector3 disp)
     {
-        cube.transform.position += disp;
+        m_cube.transform.position += disp;
     }
 
     public void SetRotationSpeed(float speed)
     {
-        cube.SetRotationSpeed(speed);
+        m_cube.SetRotationSpeed(speed);
     }
 
     public void ChangeBehaviour(string behaviourName)
     {
         OnEnd();
-        cube.SetBehaviour(behaviourName);
+        m_cube.SetBehaviour(behaviourName);
     }
 
     public void SetCube(CubeController cube)
     {
-        this.cube = cube;
+        this.m_cube = cube;
     }
 
     public MovingBlock GetMovingBlockAt(Vector3 pos)
     {
-        foreach (Collider collider in cube.colHandler.GetCollidingEntities(pos))
+        foreach (Collider collider in m_cube.colHandler.GetCollidingEntities(pos))
         {
             MovingBlock block = collider.GetComponent<MovingBlock>();
             if (block)

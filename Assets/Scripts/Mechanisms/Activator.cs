@@ -5,11 +5,11 @@ using System.Collections.Generic;
 public abstract class Activator : MonoBehaviour
 {
     [SerializeField]
-    public List<Transform> children;
+    private List<Transform> m_children;
 
     public void SetChildrenActivation(bool activated)
     {
-        foreach (Transform child in children)
+        foreach (Transform child in m_children)
         {
             Debug.Log("activated " + child);
             Mechanism mechanism = child.GetComponent<Mechanism>();

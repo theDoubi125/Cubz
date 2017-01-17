@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class FallingBehaviour : CubeBehaviour
 {
-    private float currentSpeed;
+    private float m_currentSpeed;
 
     public override void OnGround()
     {
         SetMovementDistance(1);
-        if (!cube.colHandler.IsCellEmpty(Vector3.down))
+        if (!m_cube.colHandler.IsCellEmpty(Vector3.down))
             ChangeBehaviour("Standing");
     }
 
@@ -23,7 +23,7 @@ public class FallingBehaviour : CubeBehaviour
     {
         SetTranslation(Vector3.down);
         StartRotation(Vector3.zero, Vector3.zero);
-        currentSpeed = 0;
+        m_currentSpeed = 0;
     }
 
     public override void OnEnd()
@@ -33,8 +33,8 @@ public class FallingBehaviour : CubeBehaviour
 
     public override void UpdateBehaviour()
     {
-        currentSpeed += cube.gravity * Time.deltaTime;
-        SetRotationSpeed(currentSpeed);
+        m_currentSpeed += m_cube.gravity * Time.deltaTime;
+        SetRotationSpeed(m_currentSpeed);
 
     }
 }
